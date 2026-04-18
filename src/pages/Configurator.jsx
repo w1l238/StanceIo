@@ -1,9 +1,12 @@
 import { useState, useRef } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useLocation } from 'react-router-dom'
 import { Disc3, PanelTop, PanelBottom, ArrowUpDown, Palette, Camera, Bookmark, Image, Pipette, Sun } from 'lucide-react'
 import { usePageTitle } from '../hooks/usePageTitle'
 import { CarViewer } from '../components/Viewer/CarViewer'
+import { supabase } from '../lib/supabase'
 import styles from './Configurator.module.css'
+
+const CAR_ID = '00000000-0000-0000-0000-000000000001'
 
 const CATEGORIES = [
   { key: 'wheels',       label: 'Wheels',       icon: <Disc3 size={15} /> },
@@ -71,31 +74,46 @@ const BACKGROUNDS = [
 export function Configurator() {
   usePageTitle('Configurator')
   useParams()
+  const { state } = useLocation()
+  const saved = state?.build // populated when navigating from Profile "Load build"
+  const savedCfg = saved?.config ?? {}
+
   const [activeTab, setActiveTab] = useState('wheels')
   const [cameraAngle, setCameraAngle] = useState('Side')
-  const [activeBg, setActiveBg] = useState(BACKGROUNDS[0])
+  const [activeBg, setActiveBg] = useState(
+    () => BACKGROUNDS.find(b => b.id === savedCfg.backgroundId) ?? BACKGROUNDS[0]
+  )
 
-  // Paint
-  const [activePaint, setActivePaint] = useState(DEFAULT_PAINT)
-  const [customHex, setCustomHex] = useState('#3b82f6')
-  const [hexInput, setHexInput] = useState('#3b82f6')
+  // Paint — restore preset by id, fall back to custom swatch
+  const allPaintColors = PAINT_GROUPS.flatMap(g => g.colors)
+  const savedPaint = savedCfg.paintColor
+  const initialPaint = savedPaint
+    ? allPaintColors.find(c => c.id === savedPaint.id) ?? { id: 'custom' }
+    : DEFAULT_PAINT
+  const [activePaint, setActivePaint] = useState(initialPaint)
+  const [customHex, setCustomHex] = useState(savedPaint?.id === 'custom' ? savedPaint.hex : '#3b82f6')
+  const [hexInput, setHexInput] = useState(savedPaint?.id === 'custom' ? savedPaint.hex : '#3b82f6')
   const colorInputRef = useRef()
 
-  // Ride height
-  const [rideHeight, setRideHeight] = useState(0)
+  // Ride height — prefer config.rideHeight (full float) over ride_height_mm (numeric(6,1) truncates)
+  const [rideHeight, setRideHeight] = useState(savedCfg.rideHeight ?? saved?.ride_height_mm ?? 0)
   const activePreset = RIDE_HEIGHT_PRESETS.find(p => p.offset === rideHeight)
 
   // Camber
-  const [camber, setCamber] = useState(0)
+  const [camber, setCamber] = useState(savedCfg.camber ?? 0)
 
   // Window tint
-  const [windowTint, setWindowTint] = useState(0)
-  const [tintTarget, setTintTarget] = useState('all')
+  const [windowTint, setWindowTint] = useState(savedCfg.windowTint ?? 0)
+  const [tintTarget, setTintTarget] = useState(savedCfg.tintTarget ?? 'all')
 
-  // Wheels / rim color
-  const [activeRim, setActiveRim] = useState(RIM_COLORS[0])
-  const [customRimHex, setCustomRimHex] = useState('#ffffff')
-  const [rimHexInput, setRimHexInput] = useState('#ffffff')
+  // Wheels / rim color — restore preset by id, fall back to custom
+  const savedRim = savedCfg.rimColor
+  const initialRim = savedRim
+    ? RIM_COLORS.find(r => r.id === savedRim.id) ?? { id: 'custom' }
+    : RIM_COLORS[0]
+  const [activeRim, setActiveRim] = useState(initialRim)
+  const [customRimHex, setCustomRimHex] = useState(savedRim?.id === 'custom' ? savedRim.hex : '#ffffff')
+  const [rimHexInput, setRimHexInput] = useState(savedRim?.id === 'custom' ? savedRim.hex : '#ffffff')
   const rimColorInputRef = useRef()
   const isCustomRim = activeRim.id === 'custom'
   const effectiveRim = isCustomRim
@@ -107,10 +125,43 @@ export function Configurator() {
     ? { id: 'custom', label: 'Custom', hex: customHex, roughness: 0.25, metalness: 0.7 }
     : activePaint
 
+  // Save state
+  const [saveStatus, setSaveStatus] = useState(null) // null | 'saving' | 'saved' | 'error' | 'unauthenticated'
+
+  async function handleSave() {
+    setSaveStatus('saving')
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) { setSaveStatus('unauthenticated'); return }
+
+    const payload = {
+      ride_height_mm: rideHeight,
+      config: {
+        paintColor: effectivePaint,
+        rimColor: effectiveRim,
+        mirrorCustom,
+        mirrorColor: mirrorCustom ? effectiveMirrorColor : null,
+        windowTint,
+        tintTarget,
+        rideHeight,
+        camber,
+        backgroundId: activeBg.id,
+      },
+    }
+
+    const { error } = saved?.id
+      ? await supabase.from('saved_configurations').update(payload).eq('id', saved.id)
+      : await supabase.from('saved_configurations').insert({ ...payload, user_id: user.id, car_id: CAR_ID })
+
+    if (error) console.error('Save build failed:', error)
+    setSaveStatus(error ? 'error' : 'saved')
+    if (!error) setTimeout(() => setSaveStatus(null), 2500)
+  }
+
   // Mirror color — must come after effectivePaint since it may reference it
-  const [mirrorCustom, setMirrorCustom] = useState(false)
-  const [customMirrorHex, setCustomMirrorHex] = useState('#131414')
-  const [mirrorHexInput, setMirrorHexInput] = useState('#131414')
+  const savedMirrorHex = savedCfg.mirrorColor?.hex ?? '#131414'
+  const [mirrorCustom, setMirrorCustom] = useState(savedCfg.mirrorCustom ?? false)
+  const [customMirrorHex, setCustomMirrorHex] = useState(savedMirrorHex)
+  const [mirrorHexInput, setMirrorHexInput] = useState(savedMirrorHex)
   const mirrorColorInputRef = useRef()
   const effectiveMirrorColor = mirrorCustom
     ? { id: 'custom_mirror', label: 'Custom', hex: customMirrorHex, roughness: 0.2, metalness: 0.7 }
@@ -359,19 +410,6 @@ export function Configurator() {
                 />
                 <span className={styles.sliderLabel}>Lower</span>
               </div>
-              <div className={styles.sliderRow}>
-                <span className={styles.sliderLabel}>Camber</span>
-                <input
-                  type="range"
-                  min="0"
-                  max="0.20"
-                  step="0.005"
-                  value={camber}
-                  className={styles.slider}
-                  onChange={e => setCamber(parseFloat(e.target.value))}
-                />
-                <span className={styles.sliderLabel}>{(camber * (180 / Math.PI)).toFixed(1)}°</span>
-              </div>
             </div>
           ) : activeTab === 'wheels' ? (
             <>
@@ -431,6 +469,22 @@ export function Configurator() {
                   </div>
                 )}
               </div>
+              <div className={styles.paintGroup}>
+                <p className={styles.paintGroupLabel}>Camber</p>
+                <div className={styles.sliderRow}>
+                  <span className={styles.sliderLabel}>0°</span>
+                  <input
+                    type="range"
+                    min="0"
+                    max="0.20"
+                    step="0.005"
+                    value={camber}
+                    className={styles.slider}
+                    onChange={e => setCamber(parseFloat(e.target.value))}
+                  />
+                  <span className={styles.sliderLabel}>{(camber * (180 / Math.PI)).toFixed(1)}°</span>
+                </div>
+              </div>
             </>
           ) : (
             [1, 2, 3].map(i => (
@@ -450,59 +504,44 @@ export function Configurator() {
             <>
               <p className={styles.detailName}>{windowTint === 0 ? 'Clear' : `${Math.round(windowTint * 100)}% Tint`}</p>
               <p className={styles.detailBrand}>{TINT_ZONES.find(z => z.id === tintTarget)?.label} windows</p>
-              <div className={styles.detailActions}>
-                <button className={styles.saveBtn} style={{ flex: 1 }}>
-                  <Bookmark size={14} />
-                  Save Build
-                </button>
-              </div>
             </>
           ) : activeTab === 'paint' ? (
             <>
               <p className={styles.detailName}>{effectivePaint.label}</p>
               <p className={styles.detailBrand}>{effectivePaint.finish ?? 'Custom'}</p>
-              <div className={styles.detailActions}>
-                <button className={styles.saveBtn} style={{ flex: 1 }}>
-                  <Bookmark size={14} />
-                  Save Build
-                </button>
-              </div>
             </>
           ) : activeTab === 'ride_height' ? (
             <>
               <p className={styles.detailName}>{activePreset ? activePreset.label : 'Custom'}</p>
               <p className={styles.detailBrand}>Ride Height</p>
-              <div className={styles.detailActions}>
-                <button className={styles.saveBtn} style={{ flex: 1 }}>
-                  <Bookmark size={14} />
-                  Save Build
-                </button>
-              </div>
             </>
           ) : activeTab === 'wheels' ? (
             <>
               <p className={styles.detailName}>{effectiveRim.label}</p>
               <p className={styles.detailBrand}>Rim Color</p>
-              <div className={styles.detailActions}>
-                <button className={styles.saveBtn} style={{ flex: 1 }}>
-                  <Bookmark size={14} />
-                  Save Build
-                </button>
-              </div>
             </>
           ) : (
             <>
               <p className={styles.detailName}>—</p>
               <p className={styles.detailBrand}>Select a part above</p>
-              <div className={styles.detailActions}>
-                <button className={styles.buyBtn} disabled>Buy →</button>
-                <button className={styles.saveBtn}>
-                  <Bookmark size={14} />
-                  Save Build
-                </button>
-              </div>
             </>
           )}
+          <div className={styles.detailActions}>
+            <button
+              className={styles.saveBtn}
+              style={{ flex: 1 }}
+              onClick={handleSave}
+              disabled={saveStatus === 'saving'}
+            >
+              <Bookmark size={14} />
+              {saveStatus === 'saving'        ? 'Saving…'
+                : saveStatus === 'saved'      ? 'Saved!'
+                : saveStatus === 'error'      ? 'Error — try again'
+                : saveStatus === 'unauthenticated' ? 'Sign in to save'
+                : saved?.id                   ? 'Update Build'
+                : 'Save Build'}
+            </button>
+          </div>
         </div>
       </aside>
     </div>
