@@ -247,21 +247,23 @@ function CarModel({ paintColor, rimColor, mirrorColor, windowTint, tintTarget, r
     })
   }, [windowTint, tintTarget])
 
-  // Ride height — move body root, counter-move wheels so they stay grounded
+  // Ride height — move body root, counter-move wheels so they stay grounded.
+  // cloned in deps ensures this re-fires after Suspense resolves the model,
+  // which matters when rideHeight is a static prop (e.g. SharedBuild page).
   useEffect(() => {
     if (!ref.current) return
     ref.current.position.y = baseYRef.current + rideHeight
     wheelGroupsRef.current.forEach(({ node, baseLocalY }) => {
       node.position.y = baseLocalY - rideHeight
     })
-  }, [rideHeight])
+  }, [rideHeight, cloned])
 
-  // Camber — tilt wheel tops inward (negative camber)
+  // Camber — same reasoning, cloned ensures it applies after model load
   useEffect(() => {
     wheelGroupsRef.current.forEach(({ node, camberSign }) => {
       node.rotation.z = camberSign * camber
     })
-  }, [camber])
+  }, [camber, cloned])
 
   return <primitive ref={ref} object={cloned} />
 }
