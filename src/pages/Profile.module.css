@@ -1,0 +1,173 @@
+.page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 3rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.accountSection {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.avatar {
+  width: 52px;
+  height: 52px;
+  background: #1a1a1a;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--accent);
+  flex-shrink: 0;
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-muted);
+}
+
+.email {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #f0f0f0;
+  margin: 0 0 0.25rem;
+}
+
+.joined {
+  font-size: 0.8rem;
+  color: #555;
+  margin: 0;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom: 1px solid #2e2e2e;
+  padding-bottom: 0.75rem;
+}
+
+.sectionHeader h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #f0f0f0;
+  margin: 0;
+}
+
+.count {
+  font-size: 0.75rem;
+  color: #555;
+  background: #1a1a1a;
+  border: 1px solid #2e2e2e;
+  border-radius: 10px;
+  padding: 0.1rem 0.5rem;
+}
+
+.empty {
+  padding: 3rem 0;
+  text-align: center;
+}
+
+.empty p {
+  color: #444;
+  font-size: 0.875rem;
+  margin: 0 0 0.3rem;
+}
+
+.empty p:first-child {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.buildGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  border: 1px solid #2e2e2e;
+}
+
+.buildCard {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: #111;
+}
+
+.buildThumb {
+  width: 72px;
+  height: 48px;
+  background: #1a1a1a;
+  border: 1px solid #2e2e2e;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.buildInfo {
+  flex: 1;
+}
+
+.buildName {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #f0f0f0;
+  margin: 0 0 0.2rem;
+}
+
+.buildDate {
+  font-size: 0.75rem;
+  color: #555;
+  margin: 0;
+}
+
+.buildActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.buildActions button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px solid #2e2e2e;
+  border-radius: 4px;
+  color: #888;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.buildActions button:hover {
+  border-color: #555;
+  color: #f0f0f0;
+}
+
+.delete:hover {
+  border-color: #7f1d1d !important;
+  color: #f87171 !important;
+}
+
+.nameInput {
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--accent);
+  color: #f0f0f0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  font-family: inherit;
+  padding: 0 0 0.1rem;
+  outline: none;
+  width: 100%;
+  margin-bottom: 0.2rem;
+}
