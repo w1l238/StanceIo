@@ -1,0 +1,74 @@
+.canvasWrap {
+  position: absolute;
+  inset: 0;
+}
+
+.loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  transform: translateY(-50%);
+}
+
+.loaderBar {
+  width: 120px;
+  height: 2px;
+  background: #1e1e1e;
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.loaderFill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 1px;
+  transition: width 0.2s ease;
+}
+
+.loaderText {
+  font-size: 0.7rem;
+  color: #444;
+  font-family: monospace;
+  letter-spacing: 0.05em;
+}
+
+.cityLoader {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  background: rgba(8, 8, 18, 0.85);
+  pointer-events: none;
+}
+
+.cityLoaderBar {
+  width: 180px;
+  height: 2px;
+  background: #1e1e2a;
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.cityLoaderFill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 1px;
+  animation: cityProgress 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes cityProgress {
+  from { width: 0% }
+  to   { width: 100% }
+}
+
+.cityLoaderText {
+  font-size: 0.72rem;
+  color: #444;
+  font-family: monospace;
+  letter-spacing: 0.08em;
+}
