@@ -1,0 +1,497 @@
+.page {
+  display: flex;
+  height: calc(100vh - 52px);
+  overflow: hidden;
+}
+
+.viewport {
+  flex: 1;
+  position: relative;
+  background: #0d0d0d;
+  overflow: hidden;
+}
+
+.viewportPlaceholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #333;
+}
+
+.viewportPlaceholder p {
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.carId {
+  font-size: 0.7rem;
+  color: #2a2a2a;
+  font-family: monospace;
+}
+
+.cameraControls {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+}
+
+.cameraBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #2e2e2e;
+  border-radius: 4px;
+  color: #888;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.cameraBtn:hover {
+  color: #f0f0f0;
+  border-color: #555;
+}
+
+.cameraBtnActive {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.bgPicker {
+  position: absolute;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.bgSwatch {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 4px;
+  border: 1px solid #2e2e2e;
+  background: none;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+
+.bgSwatch:hover {
+  border-color: #555;
+}
+
+.bgSwatchActive {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.bgSwatchColor {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.bgSwatchImage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  color: #555;
+}
+
+.sidebar {
+  width: 300px;
+  flex-shrink: 0;
+  background: #111;
+  border-left: 1px solid #2e2e2e;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.tabs {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #2e2e2e;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: none;
+  border: none;
+  border-bottom: 1px solid #2e2e2e;
+  color: #666;
+  padding: 0.75rem 1.25rem;
+  font-size: 0.8rem;
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+
+.tab:last-child {
+  border-bottom: none;
+}
+
+.tab:hover {
+  color: var(--accent);
+  background: var(--accent-muted);
+}
+
+.tabActive {
+  color: var(--accent) !important;
+  background: var(--accent-muted);
+  border-left: 2px solid var(--accent);
+}
+
+.options {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.optionCard {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.6rem;
+  border: 1px solid #2e2e2e;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.optionCard:hover {
+  border-color: #444;
+  background: #1a1a1a;
+}
+
+.optionThumb {
+  width: 52px;
+  height: 40px;
+  background: #1a1a1a;
+  border-radius: 3px;
+  flex-shrink: 0;
+  border: 1px solid #2e2e2e;
+}
+
+.optionName {
+  font-size: 0.8rem;
+  color: #f0f0f0;
+  margin: 0 0 0.2rem;
+}
+
+.optionBrand {
+  font-size: 0.7rem;
+  color: #555;
+  margin: 0;
+}
+
+.detail {
+  padding: 1rem 1.25rem;
+  border-top: 1px solid #2e2e2e;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.detailActions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.detailName {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #f0f0f0;
+  margin: 0;
+}
+
+.detailBrand {
+  font-size: 0.75rem;
+  color: #555;
+  margin: 0 0 0.5rem;
+}
+
+.buyBtn {
+  flex: 1;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.6rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.buyBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.buyBtn:not(:disabled):hover {
+  background: var(--accent-hover);
+}
+
+.saveBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: none;
+  border: 1px solid #2e2e2e;
+  border-radius: 4px;
+  color: #888;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.saveBtn:hover {
+  border-color: #555;
+  color: #f0f0f0;
+}
+
+.rideHeightPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 0.25rem 0;
+}
+
+.ridePresets {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.4rem;
+}
+
+.ridePresetBtn {
+  background: none;
+  border: 1px solid #2e2e2e;
+  border-radius: 4px;
+  color: #888;
+  padding: 0.55rem 0;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.ridePresetBtn:hover {
+  border-color: #555;
+  color: #f0f0f0;
+}
+
+.ridePresetActive {
+  border-color: var(--accent) !important;
+  color: var(--accent) !important;
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.sliderRow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.sliderLabel {
+  font-size: 0.68rem;
+  color: #444;
+  white-space: nowrap;
+}
+
+.slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 2px;
+  background: #2e2e2e;
+  border-radius: 1px;
+  outline: none;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid #111;
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid #111;
+}
+
+.paintGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #1e1e1e;
+}
+
+.paintGroup:last-child {
+  border-bottom: none;
+}
+
+.paintGroupLabel {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #444;
+  margin: 0;
+}
+
+.paintGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+}
+
+.paintSwatch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  background: none;
+  border: 1px solid #2e2e2e;
+  border-radius: 4px;
+  padding: 0.6rem 0.4rem;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.paintSwatch:hover {
+  border-color: #555;
+}
+
+.paintSwatchActive {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.paintSwatchColor {
+  display: block;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.08);
+  flex-shrink: 0;
+}
+
+.paintSwatchLabel {
+  font-size: 0.65rem;
+  color: #888;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.paintCustomBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  background: none;
+  border: 1px solid #2e2e2e;
+  border-radius: 4px;
+  padding: 0.55rem 0.75rem;
+  color: #888;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.paintCustomBtn:hover {
+  border-color: #555;
+  color: #f0f0f0;
+}
+
+.paintCustomControls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.hexInputWrap {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  background: #0d0d0d;
+  border: 1px solid #2e2e2e;
+  border-radius: 4px;
+  padding: 0 0.5rem;
+  gap: 0.1rem;
+}
+
+.hexHash {
+  color: #555;
+  font-size: 0.8rem;
+  font-family: monospace;
+  user-select: none;
+}
+
+.hexInput {
+  flex: 1;
+  background: none;
+  border: none;
+  color: #f0f0f0;
+  font-size: 0.8rem;
+  font-family: monospace;
+  padding: 0.45rem 0;
+  outline: none;
+  width: 0;
+  text-transform: uppercase;
+}
+
+.mirrorToggleRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.mirrorToggleRow input[type="checkbox"] {
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.nativeColorInput {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid #2e2e2e;
+  border-radius: 4px;
+  background: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
