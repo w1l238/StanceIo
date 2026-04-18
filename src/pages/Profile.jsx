@@ -9,7 +9,15 @@ import styles from './Profile.module.css'
 function BuildCard({ build, onDelete, onRename, onLoad }) {
   const [editing, setEditing] = useState(false)
   const [nameInput, setNameInput] = useState(build.name)
+  const [shareCopied, setShareCopied] = useState(false)
   const inputRef = useRef()
+
+  function handleShare() {
+    navigator.clipboard.writeText(`${window.location.origin}/builds/${build.id}`).then(() => {
+      setShareCopied(true)
+      setTimeout(() => setShareCopied(false), 2200)
+    })
+  }
 
   function startEdit() {
     setEditing(true)
@@ -29,6 +37,8 @@ function BuildCard({ build, onDelete, onRename, onLoad }) {
   }
 
   return (
+    <>
+    {shareCopied && <div className={styles.toast}>Link copied to clipboard</div>}
     <div className={styles.buildCard}>
       <div
         className={styles.buildThumb}
@@ -60,12 +70,15 @@ function BuildCard({ build, onDelete, onRename, onLoad }) {
         <button title={editing ? 'Confirm rename' : 'Rename build'} onClick={editing ? commitRename : startEdit}>
           {editing ? <Check size={13} /> : <Pencil size={13} />}
         </button>
-        <button title="Share build"><Share2 size={13} /></button>
+        <button title="Share build" onClick={handleShare}>
+          <Share2 size={13} />
+        </button>
         <button className={styles.delete} title="Delete build" onClick={() => onDelete(build.id)}>
           <Trash2 size={13} />
         </button>
       </div>
     </div>
+    </>
   )
 }
 
