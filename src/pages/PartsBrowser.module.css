@@ -1,0 +1,201 @@
+.page {
+  display: flex;
+  min-height: calc(100vh - 52px);
+}
+
+.sidebar {
+  width: 200px;
+  flex-shrink: 0;
+  border-right: 1px solid #2e2e2e;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.searchWrapper {
+  position: relative;
+  margin-bottom: 0.5rem;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 0.6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #444;
+  pointer-events: none;
+}
+
+.search {
+  width: 100%;
+  background: #1a1a1a;
+  border: 1px solid #2e2e2e;
+  border-radius: 4px;
+  color: #f0f0f0;
+  font-size: 0.8rem;
+  padding: 0.5rem 0.6rem 0.5rem 2rem;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.search::placeholder {
+  color: #444;
+}
+
+.search:focus {
+  border-color: #444;
+}
+
+.filterLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.7rem;
+  color: #444;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 1rem 0 0.4rem;
+  padding: 0;
+}
+
+.filterLabel:first-child {
+  margin-top: 0;
+}
+
+.filterList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.filterBtn {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 0.8rem;
+  padding: 0.4rem 0.5rem;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.filterBtn:hover {
+  color: var(--accent);
+  background: var(--accent-muted);
+}
+
+.filterActive {
+  color: var(--accent) !important;
+  background: var(--accent-muted);
+}
+
+.main {
+  flex: 1;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.toolbar {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  border-bottom: 1px solid #2e2e2e;
+  padding-bottom: 1rem;
+}
+
+.toolbar h1 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #f0f0f0;
+  margin: 0;
+}
+
+.resultCount {
+  font-size: 0.8rem;
+  color: #555;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1px;
+  border: 1px solid #2e2e2e;
+}
+
+.partCard {
+  background: #111;
+  display: flex;
+  flex-direction: column;
+}
+
+.partThumb {
+  aspect-ratio: 4 / 3;
+  background: #1a1a1a;
+  border-bottom: 1px solid #2e2e2e;
+}
+
+.partInfo {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.partCategory {
+  font-size: 0.7rem;
+  color: #444;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0;
+}
+
+.partName {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #f0f0f0;
+  margin: 0;
+}
+
+.partBrand {
+  font-size: 0.75rem;
+  color: #555;
+  margin: 0 0 0.5rem;
+}
+
+.partFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.25rem;
+}
+
+.partPrice {
+  font-size: 0.85rem;
+  color: #888;
+}
+
+.buyLink {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: none;
+  border: 1px solid #2e2e2e;
+  border-radius: 3px;
+  color: #888;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.6rem;
+  cursor: pointer;
+}
+
+.buyLink:not(:disabled):hover {
+  border-color: #555;
+  color: #f0f0f0;
+}
+
+.buyLink:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
