@@ -25,17 +25,17 @@ export function Home() {
 
       <section className={styles.features}>
         <div className={styles.feature}>
-          <Box size={22} className={styles.icon} />
+          <div className={styles.iconWrap}><Box size={18} className={styles.icon} /></div>
           <h3>Real-time 3D</h3>
           <p>Rotate, zoom, and inspect every angle before committing.</p>
         </div>
         <div className={styles.feature}>
-          <Layers size={22} className={styles.icon} />
+          <div className={styles.iconWrap}><Layers size={18} className={styles.icon} /></div>
           <h3>Mod catalog</h3>
           <p>Wheels, bumpers, stance, paint — curated parts from top brands.</p>
         </div>
         <div className={styles.feature}>
-          <ExternalLink size={22} className={styles.icon} />
+          <div className={styles.iconWrap}><ExternalLink size={18} className={styles.icon} /></div>
           <h3>Buy direct</h3>
           <p>Every mod links straight to where you can purchase it.</p>
         </div>

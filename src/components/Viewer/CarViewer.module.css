@@ -15,14 +15,14 @@
   width: 120px;
   height: 2px;
   background: #1e1e1e;
-  border-radius: 1px;
+  border-radius: 2px;
   overflow: hidden;
 }
 
 .loaderFill {
   height: 100%;
   background: var(--accent);
-  border-radius: 1px;
+  border-radius: 2px;
   transition: width 0.2s ease;
 }
 
@@ -50,14 +50,14 @@
   width: 180px;
   height: 2px;
   background: #1e1e2a;
-  border-radius: 1px;
+  border-radius: 2px;
   overflow: hidden;
 }
 
 .cityLoaderFill {
   height: 100%;
   background: var(--accent);
-  border-radius: 1px;
+  border-radius: 2px;
   animation: cityProgress 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 

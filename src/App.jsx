@@ -1,4 +1,4 @@
-import { Routes, Route, Link } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import { Nav } from './components/Nav/Nav'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { Home } from './pages/Home'
@@ -27,9 +27,6 @@ function App() {
           } />
         </Routes>
       </main>
-      <footer className={styles.footer}>
-        <Link to="/credits" className={styles.footerLink}>Credits &amp; Attributions</Link>
-      </footer>
     </div>
   )
 }

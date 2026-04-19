@@ -55,7 +55,7 @@ export function PartsBrowser() {
           <span className={styles.resultCount}>12 parts</span>
         </div>
 
-        <div className={styles.grid}>
+        <div className={styles.grid} key={activeCategory}>
           {Array.from({ length: 12 }).map((_, i) => (
             <div key={i} className={styles.partCard}>
               <div className={styles.partThumb} />

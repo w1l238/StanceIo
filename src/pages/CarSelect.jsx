@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom'
-import { Lock } from 'lucide-react'
 import { usePageTitle } from '../hooks/usePageTitle'
 import styles from './CarSelect.module.css'
 
@@ -47,13 +46,24 @@ export function CarSelect() {
           </div>
         ))}
 
-        {[1, 2].map(i => (
-          <div key={i} className={`${styles.card} ${styles.cardComingSoon}`}>
+        {[
+          { make: 'Honda', model: 'Civic Type R', generation: 'FL5 (2023+)', tags: ['FWD', 'Hatchback', 'Turbo'] },
+          { make: 'Nissan', model: 'GT-R',        generation: 'R35 (2007+)',  tags: ['AWD', 'Coupe', 'Twin-Turbo'] },
+        ].map(car => (
+          <div key={car.model} className={`${styles.card} ${styles.cardComingSoon}`}>
             <div className={styles.thumb}>
-              <Lock size={18} className={styles.lockIcon} />
+              <img src="/assets/cars/gr86_silhouette.svg" alt={car.model} className={styles.silhouette} />
             </div>
             <div className={styles.info}>
-              <p className={styles.comingSoon}>Coming soon</p>
+              <div>
+                <p className={styles.make}>{car.make}</p>
+                <h2 className={styles.model}>{car.model}</h2>
+                <p className={styles.generation}>{car.generation}</p>
+                <div className={styles.tags}>
+                  {car.tags.map(t => <span key={t} className={styles.tag}>{t}</span>)}
+                </div>
+              </div>
+              <button className={styles.configure} disabled>Coming soon</button>
             </div>
           </div>
         ))}

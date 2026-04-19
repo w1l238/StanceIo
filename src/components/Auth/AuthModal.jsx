@@ -5,7 +5,13 @@ import styles from './AuthModal.module.css'
 
 export function AuthModal({ onClose }) {
   const { signIn, signUp } = useAuth()
+  const [closing, setClosing] = useState(false)
   const [mode, setMode] = useState('signin') // 'signin' | 'signup'
+
+  function handleClose() {
+    setClosing(true)
+    setTimeout(onClose, 180)
+  }
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState(null)
@@ -23,7 +29,7 @@ export function AuthModal({ onClose }) {
         setSuccessMsg('Account created — check your email to confirm.')
       } else {
         await signIn(email, password)
-        onClose()
+        handleClose()
       }
     } catch (err) {
       setError(err.message)
@@ -33,9 +39,9 @@ export function AuthModal({ onClose }) {
   }
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
-      <div className={styles.modal} onClick={e => e.stopPropagation()}>
-        <button className={styles.close} onClick={onClose} aria-label="Close">
+    <div className={`${styles.overlay} ${closing ? styles.overlayClosing : ''}`} onClick={handleClose}>
+      <div className={`${styles.modal} ${closing ? styles.modalClosing : ''}`} onClick={e => e.stopPropagation()}>
+        <button className={styles.close} onClick={handleClose} aria-label="Close">
           <X size={16} />
         </button>
 

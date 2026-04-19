@@ -1,12 +1,23 @@
 import { useState, useRef } from 'react'
 import { useParams, useLocation } from 'react-router-dom'
-import { Disc3, PanelTop, PanelBottom, ArrowUpDown, Palette, Camera, Bookmark, Image, Pipette, Sun } from 'lucide-react'
+import { Disc3, PanelTop, PanelBottom, ArrowUpDown, Palette, Camera, Bookmark, Image, Pipette, Sun, Info, X, ExternalLink, User, Scale, Box } from 'lucide-react'
 import { usePageTitle } from '../hooks/usePageTitle'
 import { CarViewer } from '../components/Viewer/CarViewer'
 import { supabase } from '../lib/supabase'
 import styles from './Configurator.module.css'
 
 const CAR_ID = '00000000-0000-0000-0000-000000000001'
+
+const CREDITS = [
+  {
+    id: 1,
+    title: '2022 Toyota GR86',
+    author: 'Maroi Mister Let Me Think Official 3D Studio',
+    url: 'https://skfb.ly/pFBC7',
+    license: 'CC BY 4.0',
+    licenseUrl: 'https://creativecommons.org/licenses/by/4.0/',
+  },
+]
 
 const CATEGORIES = [
   { key: 'wheels',       label: 'Wheels',       icon: <Disc3 size={15} /> },
@@ -125,6 +136,15 @@ export function Configurator() {
     ? { id: 'custom', label: 'Custom', hex: customHex, roughness: 0.25, metalness: 0.7 }
     : activePaint
 
+  const [creditsOpen, setCreditsOpen] = useState(false)
+  const [creditsClosing, setCreditsClosing] = useState(false)
+
+  function openCredits() { setCreditsOpen(true); setCreditsClosing(false) }
+  function closeCredits() {
+    setCreditsClosing(true)
+    setTimeout(() => { setCreditsOpen(false); setCreditsClosing(false) }, 180)
+  }
+
   // Save state
   const [saveStatus, setSaveStatus] = useState(null) // null | 'saving' | 'saved' | 'error' | 'unauthenticated'
 
@@ -235,6 +255,46 @@ export function Configurator() {
             </button>
           ))}
         </div>
+
+        <button className={styles.creditsBtn} onClick={openCredits}>
+          <Info size={12} />
+          Credits
+        </button>
+
+        {creditsOpen && (
+          <div className={styles.creditsOverlay} onClick={closeCredits}>
+            <div className={`${styles.creditsModal} ${creditsClosing ? styles.creditsModalClosing : ''}`} onClick={e => e.stopPropagation()}>
+              <div className={styles.creditsModalHeader}>
+                <span>Credits &amp; Attributions</span>
+                <button className={styles.creditsCloseBtn} onClick={closeCredits}>
+                  <X size={14} />
+                </button>
+              </div>
+              <p className={styles.creditsModalSub}>
+                3D models sourced from Sketchfab and licensed under Creative Commons.
+              </p>
+              {CREDITS.map(item => (
+                <div key={item.id} className={styles.creditItem}>
+                  <div className={styles.creditItemIcon}><Box size={15} /></div>
+                  <div className={styles.creditItemBody}>
+                    <a href={item.url} target="_blank" rel="noreferrer" className={styles.creditItemTitle}>
+                      {item.title} <ExternalLink size={11} />
+                    </a>
+                    <div className={styles.creditItemMeta}>
+                      <span><User size={11} /> {item.author}</span>
+                      <span>
+                        <Scale size={11} />
+                        <a href={item.licenseUrl} target="_blank" rel="noreferrer" className={styles.creditLicenseLink}>
+                          {item.license}
+                        </a>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       <aside className={styles.sidebar}>
@@ -251,7 +311,7 @@ export function Configurator() {
           ))}
         </div>
 
-        <div className={styles.options}>
+        <div className={styles.options} key={activeTab}>
           {activeTab === 'paint' ? (
             <>
               {PAINT_GROUPS.map(group => (
@@ -312,18 +372,39 @@ export function Configurator() {
               </div>
 
               <div className={styles.paintGroup}>
-                <label className={styles.mirrorToggleRow}>
-                  <input
-                    type="checkbox"
-                    checked={mirrorCustom}
-                    onChange={e => setMirrorCustom(e.target.checked)}
-                  />
-                  <span className={styles.paintGroupLabel} style={{ margin: 0 }}>Custom mirror color</span>
-                </label>
+                <div className={styles.mirrorHeader}>
+                  <p className={styles.paintGroupLabel} style={{ margin: 0 }}>Mirrors</p>
+                  <button
+                    className={`${styles.mirrorToggleBtn} ${mirrorCustom ? styles.mirrorToggleActive : ''}`}
+                    onClick={() => setMirrorCustom(m => !m)}
+                  >
+                    {mirrorCustom ? 'Custom' : 'Match body'}
+                  </button>
+                </div>
+
                 {mirrorCustom && (
                   <>
+                    <div className={styles.paintGrid}>
+                      {[
+                        { id: 'gloss_black', label: 'Gloss Black', hex: '#111111' },
+                        { id: 'matte_black', label: 'Matte Black', hex: '#2a2a2a' },
+                        { id: 'gunmetal',    label: 'Gunmetal',    hex: '#3A3D3F' },
+                        { id: 'chrome',      label: 'Chrome',      hex: '#C8CACB' },
+                      ].map(m => (
+                        <button
+                          key={m.id}
+                          title={m.label}
+                          className={`${styles.paintSwatch} ${customMirrorHex === m.hex ? styles.paintSwatchActive : ''}`}
+                          onClick={() => { setCustomMirrorHex(m.hex); setMirrorHexInput(m.hex) }}
+                        >
+                          <span className={styles.paintSwatchColor} style={{ background: m.hex }} />
+                          <span className={styles.paintSwatchLabel}>{m.label}</span>
+                        </button>
+                      ))}
+                    </div>
+
                     <button
-                      className={`${styles.paintCustomBtn} ${styles.paintSwatchActive}`}
+                      className={styles.paintCustomBtn}
                       onClick={() => mirrorColorInputRef.current?.click()}
                     >
                       <span className={styles.paintSwatchColor} style={{ background: customMirrorHex }} />

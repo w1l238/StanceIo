@@ -6,11 +6,17 @@ import { usePageTitle } from '../hooks/usePageTitle'
 import { supabase } from '../lib/supabase'
 import styles from './Profile.module.css'
 
-function BuildCard({ build, onDelete, onRename, onLoad }) {
+function BuildCard({ build, onDelete, onRename, onLoad, index }) {
   const [editing, setEditing] = useState(false)
   const [nameInput, setNameInput] = useState(build.name)
   const [shareCopied, setShareCopied] = useState(false)
+  const [deleting, setDeleting] = useState(false)
   const inputRef = useRef()
+
+  function handleDelete() {
+    setDeleting(true)
+    setTimeout(() => onDelete(build.id), 280)
+  }
 
   function handleShare() {
     navigator.clipboard.writeText(`${window.location.origin}/builds/${build.id}`).then(() => {
@@ -39,7 +45,10 @@ function BuildCard({ build, onDelete, onRename, onLoad }) {
   return (
     <>
     {shareCopied && <div className={styles.toast}>Link copied to clipboard</div>}
-    <div className={styles.buildCard}>
+    <div
+      className={`${styles.buildCard} ${deleting ? styles.buildCardDeleting : ''}`}
+      style={{ animationDelay: `${index * 0.07}s` }}
+    >
       <div
         className={styles.buildThumb}
         style={{ background: build.config?.paintColor?.hex ?? '#1a1a1a' }}
@@ -73,7 +82,7 @@ function BuildCard({ build, onDelete, onRename, onLoad }) {
         <button title="Share build" onClick={handleShare}>
           <Share2 size={13} />
         </button>
-        <button className={styles.delete} title="Delete build" onClick={() => onDelete(build.id)}>
+        <button className={styles.delete} title="Delete build" onClick={handleDelete}>
           <Trash2 size={13} />
         </button>
       </div>
@@ -143,10 +152,11 @@ export function Profile() {
           </div>
         ) : (
           <div className={styles.buildGrid}>
-            {builds.map(build => (
+            {builds.map((build, i) => (
               <BuildCard
                 key={build.id}
                 build={build}
+                index={i}
                 onDelete={handleDelete}
                 onRename={handleRename}
                 onLoad={handleLoad}
